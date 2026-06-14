@@ -92,57 +92,72 @@ def _score(bt):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--month", default=datetime.now(timezone.utc).strftime("%Y-%m"))
-    ap.add_argument("--pick", type=int, default=8)
+    ap.add_argument("--cells", type=int, default=8, help="bio papers to shortlist (the heavy track)")
+    ap.add_argument("--atoms", type=int, default=4, help="rest-of-deeptech papers to shortlist")
     ap.add_argument("--data", default=str(ROOT / "data.json"))
     ap.add_argument("--llm", action="store_true", help="use Perplexity to write the 'why' lines")
     ap.add_argument("--fresh", action="store_true", help="pull a high-quality pool straight from OpenAlex (frontier wheelhouse queries) instead of reading data.json")
     ap.add_argument("--days", type=int, default=45, help="lookback window for --fresh")
     args = ap.parse_args()
 
-    bts, seen = [], set()
+    # Atoms & Cells taxonomy: CELLS = bio (the heavy emphasis), ATOMS = the
+    # rest of deeptech. Each paper is tagged by the track of the query that
+    # found it — no classifier needed.
+    CELLS_QUERIES = [  # bio — weighted heavier
+        "de novo protein design binder enzyme", "protein language model structure prediction design",
+        "base editing prime editing in vivo therapy", "CRISPR gene editing therapy clinical",
+        "mRNA lipid nanoparticle targeted delivery", "antibody design machine learning",
+        "single cell spatial transcriptomics atlas", "organoid disease model",
+        "CAR-T cell therapy synthetic biology", "AI drug discovery molecular generative model",
+        "genome foundation model DNA language", "directed evolution enzyme engineering",
+        "synthetic biology genetic circuit", "neural organoid brain model",
+    ]
+    ATOMS_QUERIES = [  # the rest of deeptech
+        "self-driving laboratory autonomous experimentation",
+        "2D semiconductor transistor scaling", "integrated photonics optical neural network",
+        "solid-state battery lithium metal anode", "tokamak fusion confinement net energy",
+        "quantum error correction logical qubit", "perovskite tandem solar cell efficiency",
+        "neuromorphic in-memory computing", "robot learning manipulation foundation model",
+    ]
+
+    seen = set()
+    bts = []
     if args.fresh:
-        # Curated frontier queries — Shibil's wheelhouse (bio-AI heavy +
-        # hard deeptech). Each is sharp enough that OpenAlex returns the
-        # actual breakthroughs; quality scoring (top venues) ranks them.
         from openalex import recent_works
-        FRONTIER_QUERIES = [
-            "de novo protein design binder enzyme", "protein language model structure design",
-            "base editing prime editing in vivo therapy", "CRISPR gene therapy clinical trial",
-            "self-driving laboratory autonomous experimentation", "machine learning molecular design generative",
-            "single cell spatial transcriptomics atlas", "organoid disease model",
-            "mRNA lipid nanoparticle targeted delivery", "antibody design machine learning",
-            "tokamak fusion confinement net energy gain", "2D semiconductor transistor scaling",
-            "integrated photonics optical neural network", "solid-state battery lithium metal anode",
-            "quantum error correction logical qubit", "perovskite tandem solar cell efficiency",
-            "neuromorphic in-memory computing", "robot learning manipulation foundation model",
-        ]
-        for q in FRONTIER_QUERIES:
-            for w in recent_works(q, since_days=args.days, n=4):
-                key = w.get("link") or re.sub(r"[^a-z0-9]", "", (w.get("title") or "").lower())[:50]
-                if key in seen:
-                    continue
-                seen.add(key)
-                bts.append({**w, "domain": q, "key_breakthrough": (w.get("abstract") or "")[:300]})
+
+        def pull(queries, track, per):
+            for q in queries:
+                for w in recent_works(q, since_days=args.days, n=per):
+                    key = w.get("link") or re.sub(r"[^a-z0-9]", "", (w.get("title") or "").lower())[:50]
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    bts.append({**w, "track": track, "domain": q, "key_breakthrough": (w.get("abstract") or "")[:300]})
+
+        pull(CELLS_QUERIES, "Cells", 4)
+        pull(ATOMS_QUERIES, "Atoms", 3)
         if not bts:
             sys.exit("OpenAlex returned nothing — check connectivity.")
-        # Already quality-scored per query; re-rank the merged pool by venue+recency.
-        from openalex import _venue_boost
-        bts.sort(key=lambda b: (b.get("_score", 0)), reverse=True)
     else:
         data = json.loads(Path(args.data).read_text())
         for dom in data.get("research", []):
             for bt in dom.get("breakthroughs", []):
-                # Dedupe across sectors — the same paper can match two queries.
                 key = (bt.get("link") or "") or re.sub(r"[^a-z0-9]", "", (bt.get("title") or "").lower())[:50]
                 if key in seen:
                     continue
                 seen.add(key)
-                bts.append({**bt, "domain": dom.get("name")})
+                # crude track for the sector feed: bio-ish sectors → Cells
+                dn = (dom.get("name") or "").lower()
+                track = "Cells" if any(k in dn for k in ("bio", "synthetic", "health", "pharma")) else "Atoms"
+                bts.append({**bt, "track": track, "domain": dom.get("name")})
         if not bts:
             sys.exit("No breakthroughs in data.json — run refresh.py first.")
-        bts.sort(key=_score, reverse=True)
 
-    shortlist = bts[: args.pick]
+    # Rank within each track, then take a bio-heavy split: more Cells than Atoms.
+    score_key = (lambda b: b.get("_score", 0)) if args.fresh else _score
+    cells = sorted([b for b in bts if b.get("track") == "Cells"], key=score_key, reverse=True)[: args.cells]
+    atoms = sorted([b for b in bts if b.get("track") == "Atoms"], key=score_key, reverse=True)[: args.atoms]
+    shortlist = cells + atoms
 
     papers = []
     for bt in shortlist:
@@ -151,6 +166,7 @@ def main():
         # to an arXiv id only if that's all there is. Never synthesize one.
         link = bt.get("link") or (f"https://arxiv.org/abs/{bt['arxiv_id']}" if bt.get("arxiv_id") else None)
         papers.append({
+            "track": bt.get("track"),          # "Cells" (bio) | "Atoms" (deeptech)
             "title": bt.get("title"),
             "authors": bt.get("authors") or [],
             "institution": bt.get("institution"),

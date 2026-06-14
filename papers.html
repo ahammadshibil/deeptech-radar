@@ -24,6 +24,10 @@
   select{margin-left:auto;background:var(--panel);border:1px solid var(--border);color:var(--fg);border-radius:8px;padding:6px 10px;font-family:var(--mono);font-size:12px;cursor:pointer}
   .intro{color:var(--fg);font-size:16px;line-height:1.7;padding:14px 0 24px;border-bottom:1px solid var(--border);margin-bottom:8px}
 
+  .track-head{display:flex;align-items:baseline;gap:10px;margin:26px 0 2px;padding-top:14px;border-top:2px solid var(--accent-dim)}
+  .track-head:first-child{border-top:none;padding-top:0;margin-top:8px}
+  .track-name{font-size:20px;font-weight:700;color:var(--accent);letter-spacing:.3px}
+  .track-sub{font-family:var(--mono);font-size:11px;color:var(--muted2);text-transform:lowercase}
   .paper{padding:22px 0;border-bottom:1px solid var(--border)}
   .paper .why{font-size:17px;line-height:1.55;font-weight:500;color:#eef1f4}
   .paper .t{font-size:14px;color:var(--muted);margin-top:8px}
@@ -60,17 +64,27 @@
 const esc = (s)=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtMonth = (m)=>{ const [y,mo]=String(m).split("-"); const names=["","January","February","March","April","May","June","July","August","September","October","November","December"]; return (names[+mo]||m)+" "+y; };
 
-function renderIssue(issue){
-  document.getElementById("issueDate").textContent = fmtMonth(issue.month);
-  document.getElementById("intro").innerHTML = issue.intro ? esc(issue.intro) : "";
-  const picks = (issue.papers||[]).filter(p=>p.picked!==false);
-  document.getElementById("papers").innerHTML = picks.length ? picks.map(p=>`
+function paperHTML(p){
+  return `
     <div class="paper">
       <div class="why">${esc(p.why||p.title)}</div>
       <div class="t">${p.link?`<a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.title)} ↗</a>`:`<span style="color:var(--fg);font-weight:600">${esc(p.title)}</span>`}</div>
       <div class="meta">${[p.venue,p.institution].filter(Boolean).map(esc).join(" · ")}</div>
-      <div style="margin-top:7px">${p.domain?`<span class="chip">${esc(p.domain)}</span>`:""}${p.trl?`<span class="chip trl">TRL ${esc(p.trl)}</span>`:""}${p.india_connection?`<span class="chip in">India</span>`:""}</div>
-    </div>`).join("") : `<div class="empty">No picks in this issue yet.</div>`;
+      <div style="margin-top:7px">${p.india_connection?`<span class="chip in">India</span>`:""}</div>
+    </div>`;
+}
+function renderIssue(issue){
+  document.getElementById("issueDate").textContent = fmtMonth(issue.month);
+  document.getElementById("intro").innerHTML = issue.intro ? esc(issue.intro) : "";
+  const picks = (issue.papers||[]).filter(p=>p.picked!==false);
+  if (!picks.length){ document.getElementById("papers").innerHTML = `<div class="empty">No picks in this issue yet.</div>`; return; }
+  // Atoms & Cells taxonomy: Cells (bio) first + emphasized, then Atoms.
+  const cells = picks.filter(p=>p.track==="Cells");
+  const atoms = picks.filter(p=>p.track==="Atoms");
+  const rest  = picks.filter(p=>p.track!=="Cells"&&p.track!=="Atoms");
+  const section = (label, sub, list)=> list.length ? `<div class="track-head"><span class="track-name">${label}</span><span class="track-sub">${sub}</span></div>${list.map(paperHTML).join("")}` : "";
+  document.getElementById("papers").innerHTML =
+    section("Cells", "biology", cells) + section("Atoms", "the rest of deep tech", atoms) + rest.map(paperHTML).join("");
 }
 
 function renderArchive(months, current){

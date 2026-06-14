@@ -1,0 +1,14 @@
+feat(papers): Atoms & Cells two-track digest (bio-weighted)
+
+Split the monthly "Papers I found exciting" digest into the publication's
+own taxonomy: Cells (biology, the heavy track) first, then Atoms (the rest
+of deep tech). One issue file -> two surfaces, both track-aware.
+
+- draft_issue.py: CELLS_QUERIES (14 bio) + ATOMS_QUERIES (9 deeptech);
+  --cells/--atoms split (default 8/4, bio-heavy); each paper tagged with
+  its track; rank within track. Fixes uninitialized seen/bts in --fresh.
+- papers.html: render Cells section then Atoms via track-head/-name/-sub.
+- to_substack.py: emit Cells section then Atoms section.
+- issues/2026-06.json: regenerated two-track sample (12 real-DOI papers).
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>
