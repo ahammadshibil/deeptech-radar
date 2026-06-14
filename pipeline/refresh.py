@@ -100,17 +100,63 @@ SYSTEM = (
 
 # ── Sections ────────────────────────────────────────────────────────────────
 def fetch_research(days):
+    """Real papers from OpenAlex (title/authors/institution/link are from the
+    database, never the LLM). The LLM, if a key is set, only writes the
+    one-line founder 'why' from the real abstract — it cannot invent a
+    paper or an author. This is the fix for the confabulated-breakthrough
+    root cause: you can't fabricate what you didn't generate."""
+    from openalex import recent_works
+
+    # Research indexing lags; use a wider window than the funding sections.
+    window = max(days, 45)
+
+    def why_line(w):
+        ab = (w.get("abstract") or "").strip()
+        if API_KEY and ab:
+            try:
+                p = (f"Paper: {w['title']}\nAbstract: {ab[:500]}\n\n"
+                     "One line: why should a deep-tech builder care? The white space it opens "
+                     "or the thing it makes newly possible. Under 30 words, declarative, no hype.")
+                return ask(p, SYSTEM, 0.3).strip().strip('"')
+            except Exception:
+                pass
+        # Deterministic fallback: first sentence of the real abstract.
+        return re.split(r"(?<=[.!?])\s+", ab)[0][:240] if ab else None
+
+    # Sector display-name → a sharp OpenAlex search query. Vague sector
+    # labels ("AI Infrastructure") return miscellaneous indexed noise;
+    # concrete frontier topics return the actual papers.
+    SECTOR_QUERY = {
+        "Semiconductors and Chip Design": "transistor scaling 2D semiconductor chip architecture",
+        "AI Infrastructure and Agents": "large language model agents inference systems",
+        "Synthetic Biology and Biotech": "de novo protein design gene editing cell therapy",
+        "Climate Tech and Sustainability": "carbon capture electrochemical green hydrogen ammonia",
+        "Photonics and Optics": "integrated photonics optical computing nanophotonics",
+        "Robotics and Embodied AI": "robot learning manipulation embodied policy",
+        "Advanced Materials and Energy": "solid state battery perovskite solar fusion confinement",
+        "Quantum Computing and Sensing": "quantum error correction qubit quantum sensing",
+        "Space Technology and Defense": "satellite propulsion earth observation small launch",
+    }
+
     def one(sector):
-        prompt = (
-            f"List 4-6 genuine research breakthroughs in '{sector}' from the last {days} days "
-            f"(papers, lab results, working demos). For a founder, what matters is: is this real, how mature, "
-            f"and has anyone commercialized it yet. Return JSON array; each item:\n"
-            '{"title": str, "authors": [str], "institution": str, "year": int, "field": str, '
-            '"key_breakthrough": "2-3 sentences on what was shown AND whether it is commercialized yet (the build gap)", '
-            f'"trl": "1-9 string", "india_connection": "{REGION} lab/author/relevance or null", "date": "YYYY-MM-DD"}}'
-        )
-        items = extract_json(ask(prompt, SYSTEM)) or []
-        return {"name": sector, "short_name": sector, "breakthroughs": items, "count": len(items)}
+        works = recent_works(SECTOR_QUERY.get(sector, sector), since_days=window, n=6)
+        bts = []
+        for w in works:
+            bts.append({
+                "title": w["title"],
+                "authors": w["authors"],            # REAL
+                "institution": w["institution"],     # REAL
+                "year": w["year"],
+                "field": sector,
+                "key_breakthrough": why_line(w),
+                "trl": None,                         # not inferred from a paper; omit rather than guess
+                "india_connection": (REGION if REGION.lower() in (w["institution"] or "").lower() else None),
+                "link": w["link"],                   # REAL
+                "date": w["date"],
+                "verified": True,
+            })
+        return {"name": sector, "short_name": sector, "breakthroughs": bts, "count": len(bts)}
+
     out = []
     with ThreadPoolExecutor(max_workers=5) as ex:
         futs = {ex.submit(one, s): s for s in SECTORS}
@@ -119,7 +165,6 @@ def fetch_research(days):
                 out.append(f.result())
             except Exception as e:
                 print(f"  [research] {futs[f]} failed: {e}")
-    # keep SECTORS order
     order = {s: i for i, s in enumerate(SECTORS)}
     return sorted(out, key=lambda d: order.get(d["name"], 99))
 

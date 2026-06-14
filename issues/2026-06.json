@@ -1,128 +1,174 @@
 ﻿{
     "month":  "2026-06",
     "title":  "Papers I found exciting",
-    "intro":  "The frontier moves every month. These are the June 2026 papers that made me stop scrolling — picked from the DeepTech Radar feed for what they make newly possible and the white space they open. (Sample issue — the take-lines and this intro get rewritten in my own voice before publishing.)",
+    "intro":  "Real papers, real authors, real links — sourced from OpenAlex, not an LLM\u0027s imagination. (Sample issue; the take-lines + this intro get rewritten in my own voice before publishing.)",
     "papers":  [
                    {
-                       "title":  "Atmospheric methane-to-CO2 oxidation catalysts active at ambient temperature and 2 ppm",
+                       "title":  "Environmental, economic, social and technological viewpoints on green ammonia as a basis for low carbon fertilizer: a perspective",
                        "authors":  [
-                                       "Huan Liu",
-                                       "Jennifer A. Doudna"
+                                       "Asma Jebari",
+                                       "Yusheng Zhang",
+                                       "Adrian L. Collins"
                                    ],
-                       "institution":  "UC Berkeley College of Chemistry",
+                       "institution":  "Rothamsted Research",
                        "domain":  "Climate Tech and Sustainability",
-                       "field":  "Methane removal and negative emissions technology",
-                       "trl":  "2",
+                       "field":  "Climate Tech and Sustainability",
+                       "trl":  null,
                        "india_connection":  null,
-                       "link":  null,
-                       "why":  "The study presents a heterogeneous catalyst that selectively oxidizes methane at atmospheric concentrations (~2 ppm) to CO2 at near-ambient temperature with minimal energy input, increasing the effective radiative forcing reduction per unit",
+                       "link":  "https://doi.org/10.15302/j-fase-2027722",
+                       "why":  "Ammonia, as a nitrogen-based fertilizer is essential for enhancing crop yields and supporting global food production.",
                        "picked":  true
                    },
                    {
-                       "title":  "Catalyst-free electroreduction of nitrate wastewater to ammonia for circular fertilizer production",
+                       "title":  "Comparison of Carbon Utilization Technologies for Decarbonization Strategy in the Ammonia Industry",
                        "authors":  [
-                                       "Ananya Singh",
-                                       "Prateek Jha"
+                                       "Daril Ridho Zuchrillah",
+                                       "Rizal Arifin",
+                                       "Friska Dwi Pratiwi",
+                                       "Niken Rani Nastiti"
                                    ],
-                       "institution":  "IIT Bombay Department of Chemical Engineering",
+                       "institution":  "Sepuluh Nopember Institute of Technology",
                        "domain":  "Climate Tech and Sustainability",
-                       "field":  "Green ammonia, wastewater valorization, and circular nitrogen economy",
-                       "trl":  "3",
-                       "india_connection":  "IIT Bombay",
-                       "link":  null,
-                       "why":  "The paper reports an electrochemical reactor that converts industrial nitrate-containing wastewater streams directly to ammonia with high faradaic efficiency using earth-abundant electrodes and no precious metal catalysts.",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Exciton-driven Floquet engineering of quantum materials at low drive power",
-                       "authors":  [
-                                       "Michael Zaletel",
-                                       "Denis GoleÅ¾"
-                                   ],
-                       "institution":  "Okinawa Institute of Science and Technology (OIST) \u0026 Stanford University",
-                       "domain":  "Advanced Materials and Energy",
-                       "field":  "Quantum materials and lightâ€“matter interaction",
-                       "trl":  "2",
+                       "field":  "Climate Tech and Sustainability",
+                       "trl":  null,
                        "india_connection":  null,
-                       "link":  null,
-                       "why":  "The team showed that instead of using extremely intense laser fields to induce Floquet phases, one can use **excitons**â€”bound electronâ€“hole pairsâ€”inside semiconductors to drive equivalent nonequilibrium quantum states with orders-of-m",
+                       "link":  "https://doi.org/10.22441/sinergi.2026.2.024",
+                       "why":  "Global climate change is caused by high greenhouse gas (GHG) emissions.",
                        "picked":  true
                    },
                    {
-                       "title":  "Spinâ€‘flip molybdenum complexes enable \u003e100% exciton harvesting for nextâ€‘generation solar cells",
+                       "title":  "A de novo LDLR mutation in severe familial hypercholesterolemia: case report, functional characterization, and a personalized gene correction strategy exploration",
                        "authors":  [
-                                       "Naoki Harabuchi",
-                                       "Yasuhiro Kobori"
+                                       "Shuran Zhang",
+                                       "Wenming Huang",
+                                       "Hetao Chen",
+                                       "Ninghui Mu"
                                    ],
-                       "institution":  "Kyushu University Center for Organic Photonics and Electronics Research (OPERA)",
-                       "domain":  "Advanced Materials and Energy",
-                       "field":  "Singletâ€‘fission photovoltaics and photophysical materials",
-                       "trl":  "2",
-                       "india_connection":  null,
-                       "link":  null,
-                       "why":  "Researchers engineered a molybdenumâ€‘based **spinâ€‘flip emitter** that captures triplet excitons generated by singlet fission, achieving quantum yields around 130%, i.e., more than one energy carrier per absorbed photon in solution.[1] Th",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Swaraj: Multi-Agent LLM Orchestration for Telecom Network Operations",
-                       "authors":  [
-                                       "S. K. Rao",
-                                       "Ananya Gupta"
-                                   ],
-                       "institution":  "IIT Madras Robert Bosch Centre for Data Science and AI (RBCDSAI)",
-                       "domain":  "AI Infrastructure and Agents",
-                       "field":  "Network management agents and telco AI infrastructure",
-                       "trl":  "4",
-                       "india_connection":  "IIT Madras",
-                       "link":  null,
-                       "why":  "Demonstrates a system of cooperating LLM agents that ingest OSS/BSS logs, topology graphs, and traffic KPIs to autonomously propose, simulate, and enact network configuration changes under operator-defined safety constraints.",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "De novo designed virus-like particles for targeted mRNA delivery to hematopoietic stem cells",
-                       "authors":  [
-                                       "Hannah R. Kim",
-                                       "David Baker"
-                                   ],
-                       "institution":  "Institute for Protein Design, University of Washington",
+                       "institution":  "Kunming University of Science and Technology",
                        "domain":  "Synthetic Biology and Biotech",
-                       "field":  "Protein design / gene delivery",
-                       "trl":  "3",
+                       "field":  "Synthetic Biology and Biotech",
+                       "trl":  null,
                        "india_connection":  null,
-                       "link":  "https://arxiv.org/abs/2405.06789",
-                       "why":  "Using deep-learning-guided protein design, the study reports self-assembling virus-like particles that selectively bind hematopoietic stem cells and package mRNA cargos without using viral components.",
+                       "link":  "https://doi.org/10.3389/fcvm.2026.1814798",
+                       "why":  "Background Familial hypercholesterolemia (FH) is a genetic disorder of lipid metabolism characterized by elevated plasma low-density lipoprotein resulting in cardiovascular disease (CVD).",
                        "picked":  true
                    },
                    {
-                       "title":  "Programmable optogenetic control of CAR-T cell exhaustion via synthetic transcriptional regulators",
+                       "title":  "Embodied intelligent industrial robotics: Framework and techniques",
                        "authors":  [
-                                       "Luisa Fernandez",
-                                       "Aaron Ring"
+                                       "Chaoran Zhang",
+                                       "Chenhao Zhang",
+                                       "Zhaobo Xu",
+                                       "Qiang Xie"
                                    ],
-                       "institution":  "Yale Cancer Biology Institute",
+                       "institution":  "Tsinghua–Berkeley Shenzhen Institute",
+                       "domain":  "Robotics and Embodied AI",
+                       "field":  "Robotics and Embodied AI",
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1016/j.jmsy.2026.06.001",
+                       "why":  "",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Multimodal Contrastive Learning for Zero-Shot Instruction-Following Robot with Synthetic Data",
+                       "authors":  [
+                                       "Washington Kamadi",
+                                       "Jackson Githu Njiri",
+                                       "Samuel Kangwagye",
+                                       "Shohei Aoki"
+                                   ],
+                       "institution":  "Pan African University Institute for Basic Sciences, Technology and Innovation",
+                       "domain":  "Robotics and Embodied AI",
+                       "field":  "Robotics and Embodied AI",
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.48084/etasr.18291",
+                       "why":  "Robot trajectory prediction is heavily dependent on large-scale real-world demonstrations, which limit scalability, increase data acquisition costs, and eventually prevent zero-shot generalization.",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Optimizing phage therapy with antidefense proteins acquired from the environment",
+                       "authors":  [
+                                       "Ritam Das"
+                                   ],
+                       "institution":  "International Max Planck Research School for Advanced Methods in Process and Systems Engineering",
                        "domain":  "Synthetic Biology and Biotech",
-                       "field":  "Cell therapies / synthetic gene regulation",
-                       "trl":  "3",
+                       "field":  "Synthetic Biology and Biotech",
+                       "trl":  null,
                        "india_connection":  null,
-                       "link":  null,
-                       "why":  "The researchers engineered CAR-T cells with light-responsive synthetic transcription factors that dynamically modulate exhaustion pathways such as TOX and NR4A in response to non-invasive light cues.",
+                       "link":  "https://doi.org/10.3389/fmicb.2026.1796329",
+                       "why":  "With an estimated number of 10 31 , bacteriophages are ubiquitous biological entities prevalent in various ecological niches (Hendrix et al., 1999;Mushegian, 2020).",
                        "picked":  true
                    },
                    {
-                       "title":  "High-efficiency electrochemical cement decarbonization via integrated calcium looping and CO2 mineralization",
+                       "title":  "Spontaneous Chemical Amine Oxidation in Organic Solvents Paired With Electrochemical Hydrogen Production",
                        "authors":  [
-                                       "Yunsheng Chen",
-                                       "Yet-Ming Chiang"
+                                       "Tzu-Ting Weng",
+                                       "S Chen",
+                                       "Jing‐Mei Huang",
+                                       "Jyh‐Pin Chou"
                                    ],
-                       "institution":  "MIT Department of Materials Science and Engineering",
+                       "institution":  "National Taiwan University of Science and Technology",
                        "domain":  "Climate Tech and Sustainability",
-                       "field":  "Low-carbon cement and industrial decarbonization",
-                       "trl":  "3",
+                       "field":  "Climate Tech and Sustainability",
+                       "trl":  null,
                        "india_connection":  null,
-                       "link":  null,
-                       "why":  "The work demonstrates an electrochemical cement production route that replaces limestone calcination with an electrically driven calcium-looping process, producing a pure CO2 stream for easy capture while dramatically reducing process emiss",
+                       "link":  "https://doi.org/10.1002/anie.9937212",
+                       "why":  "ABSTRACT Benzonitrile (BN) is a versatile chemical building block extensively applied across multiple sectors.",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "High-pulse-energy integrated mode-locked laser using a Mamyshev oscillator",
+                       "authors":  [
+                                       "Zheru Qiu",
+                                       "Jianqi Hu",
+                                       "Xuan Yang",
+                                       "Zhongshu Liu"
+                                   ],
+                       "institution":  "École Polytechnique Fédérale de Lausanne",
+                       "domain":  "Photonics and Optics",
+                       "field":  "Photonics and Optics",
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1038/s41586-026-10517-4",
+                       "why":  "",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Photonic Mixture-of-Experts for scalable multi-task on-chip optical neural networks",
+                       "authors":  [
+                                       "Wencan Liu",
+                                       "Zhenghang Zhang",
+                                       "Peng Meng Chan",
+                                       "Run Sun"
+                                   ],
+                       "institution":  "National Engineering Research Center for Information Technology in Agriculture",
+                       "domain":  "Photonics and Optics",
+                       "field":  "Photonics and Optics",
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1038/s41467-026-73983-4",
+                       "why":  "Photonic computing offers an energy-efficient, high-bandwidth platform for artificial intelligence (AI) but currently faces scalability bottlenecks stemming from depth-dependent designs, linear optical structures, and intrinsic optical loss",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Scaling nanoribbon transistors with monolayer transition metal dichalcogenides",
+                       "authors":  [
+                                       "Tara Peña",
+                                       "Anton E. O. Persson",
+                                       "Andrey Krayev",
+                                       "Ashildur Fridriksdottir"
+                                   ],
+                       "institution":  "Stanford University",
+                       "domain":  "Semiconductors and Chip Design",
+                       "field":  "Semiconductors and Chip Design",
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1038/s41565-026-02161-w",
+                       "why":  "Abstract Nanoscale transistors demand aggressive scaling of all channel dimensions—length, width and thickness.",
                        "picked":  true
                    }
                ],
-    "draftedAt":  "2026-06-14T14:37:19.120665+00:00"
+    "draftedAt":  "2026-06-14T17:53:06.566081+00:00"
 }

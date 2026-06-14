@@ -72,22 +72,20 @@ def _why_fallback(bt):
     return first[:240]
 
 
-# Excitement heuristic for ordering candidates (you re-rank by hand anyway):
-# lower TRL = more frontier/exciting, recent = better, India-connected = bonus.
+# Ordering heuristic (you re-rank by hand anyway): recent first, India bonus,
+# and only real/linkable papers float up.
 def _score(bt):
     s = 0.0
-    try:
-        trl = int(str(bt.get("trl") or "5").strip()[:1]); s += (9 - trl) * 1.5
-    except Exception:
-        pass
     d = bt.get("date") or ""
     try:
         days = (datetime.now(timezone.utc) - datetime.fromisoformat(d).replace(tzinfo=timezone.utc)).days
-        s += max(0, 30 - days) / 10
+        s += max(0, 60 - days) / 10
     except Exception:
         pass
     if bt.get("india_connection"):
         s += 1.5
+    if bt.get("link"):
+        s += 1.0
     return s
 
 
@@ -100,11 +98,15 @@ def main():
     args = ap.parse_args()
 
     data = json.loads(Path(args.data).read_text())
-    bts = []
+    bts, seen = [], set()
     for dom in data.get("research", []):
         for bt in dom.get("breakthroughs", []):
-            bt = {**bt, "domain": dom.get("name")}
-            bts.append(bt)
+            # Dedupe across sectors — the same paper can match two queries.
+            key = (bt.get("link") or "") or re.sub(r"[^a-z0-9]", "", (bt.get("title") or "").lower())[:50]
+            if key in seen:
+                continue
+            seen.add(key)
+            bts.append({**bt, "domain": dom.get("name")})
     if not bts:
         sys.exit("No breakthroughs in data.json — run refresh.py first.")
 
@@ -114,7 +116,9 @@ def main():
     papers = []
     for bt in shortlist:
         why = (_why_llm(bt) if args.llm else None) or _why_fallback(bt)
-        link = f"https://arxiv.org/abs/{bt['arxiv_id']}" if bt.get("arxiv_id") else None
+        # Real link straight from the source (OpenAlex DOI/landing); fall back
+        # to an arXiv id only if that's all there is. Never synthesize one.
+        link = bt.get("link") or (f"https://arxiv.org/abs/{bt['arxiv_id']}" if bt.get("arxiv_id") else None)
         papers.append({
             "title": bt.get("title"),
             "authors": bt.get("authors") or [],
