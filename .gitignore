@@ -4,3 +4,4 @@ __pycache__/
 _raw.json
 
 issues/*.draft.json
+COMMIT_MSG.tmp
