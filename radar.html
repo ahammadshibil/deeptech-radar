@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DeepTech Radar — what's breaking in frontier research</title>
+<meta name="description" content="A standing map of frontier deep-tech research: breakthroughs by domain, who's commercializing them, TRL maturity, funding flows, and policy tailwinds." />
+<style>
+  :root{
+    --bg:#0a0b0d; --panel:#131519; --panel2:#15181d; --border:#23262d;
+    --fg:#d6dae0; --muted:#8a909a; --muted2:#666b75;
+    --accent:#2dd4bf; --accent-dim:#0f766e; --gold:#d6a23e;
+    --radius:12px; --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1500px;margin:0 auto;padding:0 18px}
+  .muted{color:var(--muted)} .mono{font-family:var(--mono)}
+
+  /* Header */
+  header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 0 10px}
+  .logo{font-size:22px}
+  h1{font-size:19px;font-weight:700;margin:0;letter-spacing:.2px}
+  .updated{font-size:12px;color:var(--muted2)}
+  .pills{margin-left:auto;display:flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:999px;padding:3px}
+  .pill{font-size:12px;color:var(--muted);padding:5px 12px;border-radius:999px;cursor:pointer;border:none;background:none;font-family:inherit}
+  .pill.active{background:var(--accent-dim);color:#eafff9}
+  .tagline{color:var(--muted);font-size:13px;padding:0 0 14px}
+
+  /* KPI row */
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;padding-bottom:18px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .kpi .label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
+  .kpi .val{font-size:30px;font-weight:700;margin-top:6px;font-family:var(--mono)}
+
+  /* Tabs */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);padding-bottom:0;margin-bottom:16px;flex-wrap:wrap}
+  .tab{font-size:13px;color:var(--muted);padding:9px 14px;cursor:pointer;border:none;background:none;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab:hover{color:var(--fg)}
+
+  /* Filters */
+  .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  select,.toggle{background:var(--panel);border:1px solid var(--border);color:var(--fg);border-radius:8px;padding:7px 10px;font-family:inherit;font-size:13px;cursor:pointer}
+  .toggle.on{border-color:var(--accent);color:var(--accent)}
+  .fcount{color:var(--muted2);font-size:12px}
+
+  /* Cards grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-bottom:40px}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column}
+  .card h3{margin:0;font-size:15px;font-weight:600;padding-right:30px}
+  .card .num{position:absolute;top:14px;right:16px;font-size:22px;font-weight:700;color:var(--accent);font-family:var(--mono)}
+  .card-head{position:relative}
+  .trl{font-size:12px;color:var(--muted);margin-top:10px}
+  .trl b{color:var(--fg)}
+  .labs{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.55}
+  .labs a{color:var(--fg)}
+  .badge{display:inline-block;font-size:10px;font-family:var(--mono);color:var(--gold);border:1px solid var(--gold);border-radius:5px;padding:2px 6px;margin-top:10px;align-self:flex-start}
+  .expand{margin-top:12px;font-size:12px;color:var(--accent);cursor:pointer;border:none;background:none;padding:0;font-family:inherit;align-self:flex-start}
+  .items{margin-top:12px;border-top:1px solid var(--border);padding-top:12px;display:none}
+  .items.open{display:block}
+  .item{padding:10px 0;border-bottom:1px solid var(--border)}
+  .item:last-child{border-bottom:none}
+  .item .t{font-weight:600;font-size:13.5px}
+  .item .meta{font-size:11.5px;color:var(--muted2);margin:3px 0}
+  .item .body{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .chip{display:inline-block;font-size:10px;font-family:var(--mono);padding:1px 6px;border-radius:4px;border:1px solid var(--border);color:var(--muted);margin-right:5px}
+  .chip.trl{color:var(--accent);border-color:var(--accent-dim)}
+  .chip.in{color:var(--gold);border-color:var(--gold)}
+
+  /* List rows (startups / policy / top10) */
+  .rows{display:flex;flex-direction:column;gap:10px;padding-bottom:40px}
+  .row{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+  .row .rt{font-weight:600;font-size:14.5px}
+  .row .rmeta{font-size:11.5px;color:var(--muted2);margin:4px 0}
+  .row .rbody{font-size:13px;color:var(--muted);margin-top:5px}
+  .rank{font-family:var(--mono);color:var(--accent);font-weight:700;margin-right:8px}
+  .amt{font-family:var(--mono);color:var(--accent)}
+
+  .empty{color:var(--muted2);text-align:center;padding:60px 0}
+  footer{color:var(--muted2);font-size:12px;border-top:1px solid var(--border);padding:18px 0 40px;margin-top:10px}
+
+  @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:680px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.pills{margin-left:0;width:100%;overflow-x:auto}h1{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="logo">🔬</span>
+    <h1>DeepTech Radar</h1>
+    <span class="updated mono" id="updated"></span>
+    <div class="pills" id="pills">
+      <button class="pill" data-tf="today">Today</button>
+      <button class="pill" data-tf="week">This Week</button>
+      <button class="pill" data-tf="month">This Month</button>
+      <button class="pill" data-tf="quarter">This Quarter</button>
+      <button class="pill active" data-tf="all">All Time</button>
+    </div>
+  </header>
+  <div class="tagline">What's breaking in frontier research — breakthroughs by domain, who's commercializing them (and who isn't = your white space), TRL maturity, funding flows, policy tailwinds.</div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="research">Research</button>
+    <button class="tab" data-tab="startups">Startups</button>
+    <button class="tab" data-tab="funding">Funding</button>
+    <button class="tab" data-tab="policy">Policy</button>
+    <button class="tab" data-tab="top10">Top 10</button>
+  </div>
+
+  <div id="view"></div>
+
+  <footer>
+    Static snapshot · generated by the deeptech-radar pipeline · data is research intelligence, not investment advice.
+  </footer>
+</div>
+
+<script>
+const DATA_URL = "data.json"; // sits next to this file
+let DATA = null;
+let TF = "all";
+let TAB = "research";
+const F = { domain: "all", trl: "all", indiaOnly: false };
+
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const fmtMoney = (n) => { n = Number(n)||0; if(!n) return "$0"; if(n>=1e9) return "$"+(n/1e9).toFixed(1).replace(/\.0$/,"")+"B"; if(n>=1e6) return "$"+Math.round(n/1e6)+"M"; if(n>=1e3) return "$"+Math.round(n/1e3)+"K"; return "$"+n; };
+
+// Timeframe filter: keep items whose .date is within the window measured
+// back from the data's generated time.
+function tfCutoff(){
+  if (TF==="all") return null;
+  const now = DATA.generatedAt ? new Date(DATA.generatedAt) : new Date();
+  const days = { today:1, week:7, month:31, quarter:92 }[TF] || 99999;
+  return new Date(now.getTime() - days*864e5);
+}
+function inWindow(dateStr){
+  const cut = tfCutoff(); if (!cut) return true;
+  if (!dateStr) return false;
+  const d = new Date(dateStr); if (isNaN(d)) return false;
+  return d >= cut;
+}
+
+// Apply timeframe to a deep copy of research domains (filter breakthroughs).
+function filteredResearch(){
+  return (DATA.research||[]).map(dom => {
+    let bts = (dom.breakthroughs||[]).filter(b => inWindow(b.date));
+    if (F.trl!=="all") bts = bts.filter(b => String(b.trl)===F.trl);
+    if (F.indiaOnly) bts = bts.filter(b => b.india_connection);
+    return { ...dom, breakthroughs: bts, count: bts.length };
+  }).filter(dom => dom.breakthroughs.length > 0)
+    .filter(dom => F.domain==="all" || dom.name===F.domain);
+}
+const filterByTf = (arr) => (arr||[]).filter(x => inWindow(x.date));
+
+// ---------- KPIs ----------
+function renderKPIs(){
+  const research = filterByTf((DATA.research||[]).flatMap(d=>d.breakthroughs||[]));
+  const g = filterByTf(DATA.globalStartups);
+  const i = filterByTf(DATA.indiaStartups);
+  const p = filterByTf(DATA.policies);
+  const gf = g.reduce((s,x)=>s+(Number(x.amount)||0),0);
+  const indf = i.reduce((s,x)=>s+(Number(x.amount)||0),0);
+  const k = [
+    ["Breakthroughs", research.length],
+    ["Global Startups", g.length],
+    ["India Startups", i.length],
+    ["Policies", p.length],
+    ["Global Funding", fmtMoney(gf)],
+    ["India Funding", fmtMoney(indf)],
+  ];
+  document.getElementById("kpis").innerHTML = k.map(([l,v]) =>
+    `<div class="kpi"><div class="label">${l}</div><div class="val">${v}</div></div>`).join("");
+}
+
+// ---------- Research tab ----------
+function viewResearch(){
+  const doms = filteredResearch();
+  const allDomains = [...new Set((DATA.research||[]).map(d=>d.name))];
+  const allTrls = [...new Set((DATA.research||[]).flatMap(d=>(d.breakthroughs||[]).map(b=>String(b.trl))))].filter(Boolean).sort();
+  const totalBt = doms.reduce((s,d)=>s+d.breakthroughs.length,0);
+  const filters = `
+    <div class="filters">
+      <select id="fDomain">
+        <option value="all">All Domains</option>
+        ${allDomains.map(d=>`<option value="${esc(d)}" ${F.domain===d?"selected":""}>${esc(d)}</option>`).join("")}
+      </select>
+      <select id="fTrl">
+        <option value="all">All TRL</option>
+        ${allTrls.map(t=>`<option value="${esc(t)}" ${F.trl===t?"selected":""}>TRL ${esc(t)}</option>`).join("")}
+      </select>
+      <button class="toggle ${F.indiaOnly?"on":""}" id="fIndia">India-connected</button>
+      <span class="fcount">${doms.length} domains · ${totalBt} breakthroughs</span>
+    </div>`;
+  const cards = doms.map((dom,di) => {
+    const trls = [...new Set(dom.breakthroughs.map(b=>b.trl).filter(Boolean))];
+    const labs = [...new Set(dom.breakthroughs.map(b=>b.institution).filter(Boolean))];
+    const inN = dom.breakthroughs.filter(b=>b.india_connection).length;
+    const items = dom.breakthroughs.map(b => `
+      <div class="item">
+        <div class="t">${esc(b.title)}</div>
+        <div class="meta">${esc(b.institution||"")}${b.field?" · "+esc(b.field):""}${b.date?" · "+esc(b.date):""}</div>
+        <div>${b.trl?`<span class="chip trl">TRL ${esc(b.trl)}</span>`:""}${b.india_connection?`<span class="chip in">India</span>`:""}${b.arxiv_id?`<span class="chip">arXiv ${esc(b.arxiv_id)}</span>`:""}</div>
+        <div class="body">${esc(b.key_breakthrough||"")}</div>
+        ${b.india_connection?`<div class="body" style="color:var(--gold)">India: ${esc(b.india_connection)}</div>`:""}
+      </div>`).join("");
+    return `
+      <div class="card">
+        <div class="card-head"><h3>${esc(dom.name)}</h3><div class="num">${dom.breakthroughs.length}</div></div>
+        <div class="trl">TRL: <b>${trls.join(", ")||"—"}</b></div>
+        <div class="labs">Labs: ${labs.slice(0,4).map(esc).join(" · ")}${labs.length>4?" · +"+(labs.length-4):""}</div>
+        ${inN?`<span class="badge">IN ${inN}</span>`:""}
+        <button class="expand" data-exp="${di}">Show ${dom.breakthroughs.length} breakthroughs ▾</button>
+        <div class="items" id="items-${di}">${items}</div>
+      </div>`;
+  }).join("");
+  document.getElementById("view").innerHTML = filters + (doms.length?`<div class="grid">${cards}</div>`:`<div class="empty">No breakthroughs in this window.</div>`);
+
+  document.getElementById("fDomain").onchange = (e)=>{F.domain=e.target.value;render()};
+  document.getElementById("fTrl").onchange = (e)=>{F.trl=e.target.value;render()};
+  document.getElementById("fIndia").onclick = ()=>{F.indiaOnly=!F.indiaOnly;render()};
+  document.querySelectorAll("[data-exp]").forEach(b=>b.onclick=()=>{
+    const el=document.getElementById("items-"+b.dataset.exp); el.classList.toggle("open");
+    b.textContent = el.classList.contains("open") ? b.textContent.replace("▾","▴") : b.textContent.replace("▴","▾");
+  });
+}
+
+// ---------- Startups tab ----------
+function viewStartups(){
+  const g = filterByTf(DATA.globalStartups), i = filterByTf(DATA.indiaStartups);
+  const gRow = (s)=>`<div class="row">
+    <div class="rt">${esc(s.name)} ${s.amount_str?`<span class="amt">· ${esc(s.amount_str)}</span>`:""}</div>
+    <div class="rmeta">${esc(s.sector||"")}${s.country?" · "+esc(s.country):""}${s.stage?" · "+esc(s.stage):""}${s.lead_investors?" · led by "+esc(Array.isArray(s.lead_investors)?s.lead_investors.join(", "):s.lead_investors):""}</div>
+    <div class="rbody">${esc(s.technical_thesis||"")}</div>
+    ${s.india_relevance?`<div class="rbody" style="color:var(--gold)">India relevance: ${esc(s.india_relevance)}</div>`:""}
+    ${s.source_url?`<div class="rmeta"><a href="${esc(s.source_url)}" target="_blank" rel="noopener">source ↗</a></div>`:""}
+  </div>`;
+  const iRow = (s)=>`<div class="row">
+    <div class="rt">${esc(s.name)} ${s.amount_str?`<span class="amt">· ${esc(s.amount_str)}</span>`:""}</div>
+    <div class="rmeta">${esc(s.sector||"")}${s.city?" · "+esc(s.city):""}${s.funding_stage?" · "+esc(s.funding_stage):""}${s.research_origin?" · ex "+esc(s.research_origin):""}</div>
+    <div class="rbody">${esc(s.technology_thesis||"")}</div>
+    ${s.source_url?`<div class="rmeta"><a href="${esc(s.source_url)}" target="_blank" rel="noopener">source ↗</a></div>`:""}
+  </div>`;
+  document.getElementById("view").innerHTML =
+    `<div class="filters"><span class="fcount">${g.length} global · ${i.length} India — funded deep-tech startups (your competition map)</span></div>`+
+    `<h3 style="margin:6px 0 10px;font-size:13px;color:var(--muted)">🌍 Global</h3><div class="rows">${g.map(gRow).join("")||'<div class="empty">none in window</div>'}</div>`+
+    `<h3 style="margin:6px 0 10px;font-size:13px;color:var(--muted)">🇮🇳 India</h3><div class="rows">${i.map(iRow).join("")||'<div class="empty">none in window</div>'}</div>`;
+}
+
+// ---------- Funding tab ----------
+function viewFunding(){
+  const all = [...filterByTf(DATA.globalStartups).map(s=>({...s,_geo:"Global"})), ...filterByTf(DATA.indiaStartups).map(s=>({...s,_geo:"India"}))]
+    .filter(s=>Number(s.amount)).sort((a,b)=>(Number(b.amount)||0)-(Number(a.amount)||0));
+  const bySector = {};
+  for (const s of all){ const k=s.sector||"Other"; bySector[k]=(bySector[k]||0)+(Number(s.amount)||0); }
+  const sectors = Object.entries(bySector).sort((a,b)=>b[1]-a[1]);
+  const max = sectors[0]?.[1]||1;
+  const bars = sectors.map(([k,v])=>`
+    <div class="row" style="display:flex;align-items:center;gap:12px">
+      <div style="flex:0 0 200px">${esc(k)}</div>
+      <div style="flex:1;background:var(--panel2);border-radius:6px;height:10px;overflow:hidden"><div style="height:100%;width:${(v/max*100).toFixed(1)}%;background:var(--accent)"></div></div>
+      <div class="amt" style="flex:0 0 70px;text-align:right">${fmtMoney(v)}</div>
+    </div>`).join("");
+  const rows = all.slice(0,40).map(s=>`<div class="row" style="display:flex;justify-content:space-between;gap:12px">
+      <div><span class="rt">${esc(s.name)}</span> <span class="muted" style="font-size:12px">${esc(s.sector||"")} · ${esc(s._geo)}</span></div>
+      <div class="amt">${esc(s.amount_str||fmtMoney(s.amount))}</div>
+    </div>`).join("");
+  document.getElementById("view").innerHTML =
+    `<div class="filters"><span class="fcount">where capital is flowing — by sector, then by round</span></div>`+
+    `<div class="rows">${bars}</div>`+
+    `<h3 style="margin:14px 0 10px;font-size:13px;color:var(--muted)">Rounds</h3><div class="rows">${rows||'<div class="empty">none in window</div>'}</div>`;
+}
+
+// ---------- Policy tab ----------
+function viewPolicy(){
+  const p = filterByTf(DATA.policies);
+  const rows = p.map(x=>`<div class="row">
+    <div class="rt">${esc(x.name)} ${x.country?`<span class="muted" style="font-size:12px">· ${esc(x.country)}</span>`:""}</div>
+    <div class="rmeta">${esc(x.domain||"")}${x.funding_amount?" · "+esc(x.funding_amount):""}${x.impact_score?" · impact "+esc(x.impact_score):""}</div>
+    ${x.startup_opportunities?`<div class="rbody">${esc(x.startup_opportunities)}</div>`:""}
+    ${x.opportunity?`<div class="rbody" style="color:var(--gold)">Opportunity: ${esc(x.opportunity)}</div>`:""}
+    ${x.source_url?`<div class="rmeta"><a href="${esc(x.source_url)}" target="_blank" rel="noopener">source ↗</a></div>`:""}
+  </div>`).join("");
+  document.getElementById("view").innerHTML =
+    `<div class="filters"><span class="fcount">${p.length} policies — tailwinds + the openings they create</span></div>`+
+    `<div class="rows">${rows||'<div class="empty">none in window</div>'}</div>`;
+}
+
+// ---------- Top 10 tab ----------
+function viewTop10(){
+  const t = (DATA.top10||[]).slice().sort((a,b)=>(a.rank||99)-(b.rank||99));
+  const rows = t.map(x=>`<div class="row">
+    <div class="rt"><span class="rank">#${esc(x.rank)}</span>${esc(x.name)}</div>
+    <div class="rmeta">${x.market_size_2035?"TAM 2035: "+esc(x.market_size_2035):""}${x.signal_strength?" · signal "+esc(x.signal_strength):""}${x.india_readiness?" · India: "+esc(x.india_readiness):""}</div>
+    <div class="rbody">${esc(x.thesis||"")}</div>
+    ${x.geographic_hubs?`<div class="rmeta">hubs: ${esc(Array.isArray(x.geographic_hubs)?x.geographic_hubs.join(", "):x.geographic_hubs)}</div>`:""}
+  </div>`).join("");
+  document.getElementById("view").innerHTML =
+    `<div class="filters"><span class="fcount">10 frontier build opportunities, ranked by signal</span></div>`+
+    `<div class="rows">${rows||'<div class="empty">none</div>'}</div>`;
+}
+
+function render(){
+  renderKPIs();
+  ({ research:viewResearch, startups:viewStartups, funding:viewFunding, policy:viewPolicy, top10:viewTop10 }[TAB] || viewResearch)();
+}
+
+function boot(){
+  document.getElementById("updated").textContent = DATA.generatedAt ? "Updated " + new Date(DATA.generatedAt).toISOString().slice(0,10) : "";
+  document.querySelectorAll("#tabs .tab").forEach(b=>b.onclick=()=>{
+    TAB=b.dataset.tab; document.querySelectorAll("#tabs .tab").forEach(x=>x.classList.toggle("active",x===b));
+    if(TAB!=="research"){F.domain="all";F.trl="all";F.indiaOnly=false} render();
+  });
+  document.querySelectorAll("#pills .pill").forEach(b=>b.onclick=()=>{
+    TF=b.dataset.tf; document.querySelectorAll("#pills .pill").forEach(x=>x.classList.toggle("active",x===b)); render();
+  });
+  render();
+}
+
+fetch(DATA_URL).then(r=>r.json()).then(d=>{DATA=d;boot()}).catch(e=>{
+  document.getElementById("view").innerHTML = `<div class="empty">Could not load data.json — make sure it sits next to radar.html.<br><span class="mono">${esc(e.message)}</span></div>`;
+});
+</script>
+</body>
+</html>
