@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Papers I found exciting — a monthly digest</title>
+<meta name="description" content="A curated monthly digest of the deep-tech and bio papers worth stopping for — what they make newly possible, and the white space they open." />
+<style>
+  :root{
+    --bg:#0a0b0d; --panel:#131519; --border:#23262d;
+    --fg:#d6dae0; --muted:#8a909a; --muted2:#666b75;
+    --accent:#2dd4bf; --accent-dim:#0f766e; --gold:#d6a23e;
+    --mono:"JetBrains Mono",ui-monospace,Menlo,monospace; --sans:"DM Sans",-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  .muted{color:var(--muted)} .mono{font-family:var(--mono)}
+
+  header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:30px 0 6px}
+  h1{font-size:24px;font-weight:700;margin:0;letter-spacing:.2px}
+  .issue-date{font-family:var(--mono);font-size:13px;color:var(--accent)}
+  select{margin-left:auto;background:var(--panel);border:1px solid var(--border);color:var(--fg);border-radius:8px;padding:6px 10px;font-family:var(--mono);font-size:12px;cursor:pointer}
+  .intro{color:var(--fg);font-size:16px;line-height:1.7;padding:14px 0 24px;border-bottom:1px solid var(--border);margin-bottom:8px}
+
+  .paper{padding:22px 0;border-bottom:1px solid var(--border)}
+  .paper .why{font-size:17px;line-height:1.55;font-weight:500;color:#eef1f4}
+  .paper .t{font-size:14px;color:var(--muted);margin-top:8px}
+  .paper .t a{color:var(--fg);font-weight:600}
+  .paper .meta{font-size:12px;color:var(--muted2);margin-top:5px;font-family:var(--mono)}
+  .chip{display:inline-block;font-size:10px;font-family:var(--mono);padding:1px 6px;border-radius:4px;border:1px solid var(--border);color:var(--muted);margin-right:5px}
+  .chip.trl{color:var(--accent);border-color:var(--accent-dim)}
+  .chip.in{color:var(--gold);border-color:var(--gold)}
+
+  .archive{padding:26px 0 10px}
+  .archive h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin:0 0 10px}
+  .archive a{display:inline-block;margin:0 12px 8px 0;font-family:var(--mono);font-size:13px}
+  footer{color:var(--muted2);font-size:12px;border-top:1px solid var(--border);padding:20px 0 50px;margin-top:14px}
+  .empty{color:var(--muted2);text-align:center;padding:60px 0}
+  @media(max-width:560px){h1{font-size:20px}.paper .why{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Papers I found exciting</h1>
+    <span class="issue-date" id="issueDate"></span>
+    <select id="picker" aria-label="Pick an issue"></select>
+  </header>
+  <div id="intro" class="intro"></div>
+  <div id="papers"></div>
+  <div class="archive" id="archive"></div>
+  <footer>
+    A monthly hand-picked digest · curated from the <a href="/deeptechradar">DeepTech Radar</a> feed · <a href="/">ahammadshibil.com</a>
+  </footer>
+</div>
+
+<script>
+const esc = (s)=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtMonth = (m)=>{ const [y,mo]=String(m).split("-"); const names=["","January","February","March","April","May","June","July","August","September","October","November","December"]; return (names[+mo]||m)+" "+y; };
+
+function renderIssue(issue){
+  document.getElementById("issueDate").textContent = fmtMonth(issue.month);
+  document.getElementById("intro").innerHTML = issue.intro ? esc(issue.intro) : "";
+  const picks = (issue.papers||[]).filter(p=>p.picked!==false);
+  document.getElementById("papers").innerHTML = picks.length ? picks.map(p=>`
+    <div class="paper">
+      <div class="why">${esc(p.why||p.title)}</div>
+      <div class="t">${p.link?`<a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.title)} ↗</a>`:`<span style="color:var(--fg);font-weight:600">${esc(p.title)}</span>`}</div>
+      <div class="meta">${[p.institution,p.field].filter(Boolean).map(esc).join(" · ")}</div>
+      <div style="margin-top:7px">${p.domain?`<span class="chip">${esc(p.domain)}</span>`:""}${p.trl?`<span class="chip trl">TRL ${esc(p.trl)}</span>`:""}${p.india_connection?`<span class="chip in">India</span>`:""}</div>
+    </div>`).join("") : `<div class="empty">No picks in this issue yet.</div>`;
+}
+
+function renderArchive(months, current){
+  if (months.length<2){ document.getElementById("archive").innerHTML=""; return; }
+  document.getElementById("archive").innerHTML = `<h3>Past issues</h3>` +
+    months.map(m=>`<a href="#${m}" data-m="${m}" style="${m===current?'color:var(--fg)':''}">${fmtMonth(m)}</a>`).join("");
+  document.querySelectorAll("#archive a").forEach(a=>a.onclick=(e)=>{e.preventDefault();load(a.dataset.m)});
+}
+
+let MONTHS=[];
+async function load(month){
+  const issue = await fetch(`issues/${month}.json`).then(r=>r.json());
+  renderIssue(issue); renderArchive(MONTHS, month);
+  const pk=document.getElementById("picker"); if(pk) pk.value=month;
+  history.replaceState(null,"","#"+month);
+}
+
+fetch("issues/index.json").then(r=>r.json()).then(idx=>{
+  MONTHS = idx.slice().sort().reverse();
+  const pk=document.getElementById("picker");
+  pk.innerHTML = MONTHS.map(m=>`<option value="${m}">${fmtMonth(m)}</option>`).join("");
+  pk.onchange = ()=>load(pk.value);
+  const hash=location.hash.replace("#","");
+  load(MONTHS.includes(hash)?hash:MONTHS[0]);
+}).catch(e=>{
+  document.getElementById("papers").innerHTML = `<div class="empty">No issues yet.<br><span class="mono">${esc(e.message)}</span></div>`;
+});
+</script>
+</body>
+</html>

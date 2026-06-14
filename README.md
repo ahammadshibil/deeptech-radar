@@ -48,6 +48,32 @@ python pipeline/refresh.py --section research --days 14   # one section, wider w
 { "sectors": ["Your", "Sectors", "Here"], "region": "Southeast Asia" }
 ```
 
+## Monthly digest — "Papers I found exciting"
+
+A curated, voiced, monthly companion to the live radar. The radar is the
+firehose; this is the hand-picked issue. Pipeline-drafts-you-trim:
+
+```bash
+# 1. Draft from the month's breakthroughs (orders frontier-first)
+python pipeline/draft_issue.py --month 2026-06
+#    optional: PERPLEXITY_API_KEY=... python pipeline/draft_issue.py --llm
+#    → writes issues/2026-06.draft.json
+# 2. Trim it: keep what excited you (picked:false to drop), rewrite each
+#    `why` line + the `intro` in your own voice.
+# 3. Publish: rename to issues/2026-06.json, add "2026-06" to issues/index.json.
+```
+
+Then it appears on **two surfaces from the one issue file**:
+
+- **Site** — `papers.html` renders the latest issue + an archive switcher. Host it like the radar (e.g. `papers/index.html` + `issues/` → `yoursite.com/papers`).
+- **Substack / newsletter** — `python pipeline/to_substack.py 2026-06 > june.md` emits paste-ready markdown for [Atoms & Cells](https://atomsandcells.substack.com) or any newsletter.
+
+Issue schema (`issues/<YYYY-MM>.json`):
+```jsonc
+{ "month": "2026-06", "title": "Papers I found exciting", "intro": "your opener",
+  "papers": [{ title, authors, institution, domain, field, trl, india_connection, link, "why": "your one-line take", "picked": true }] }
+```
+
 ## Deploy
 
 It's static — host anywhere:
