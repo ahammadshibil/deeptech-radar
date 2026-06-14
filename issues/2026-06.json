@@ -1,155 +1,25 @@
 ﻿{
     "month":  "2026-06",
     "title":  "Papers I found exciting",
-    "intro":  "Real papers, real authors, real links — sourced from OpenAlex, not an LLM\u0027s imagination. (Sample issue; the take-lines + this intro get rewritten in my own voice before publishing.)",
+    "intro":  "Real papers, real authors, real DOIs — sourced from OpenAlex and ranked by venue, not an LLM\u0027s imagination. (Sample issue; take-lines + intro get rewritten in my own voice before publishing.)",
     "papers":  [
                    {
-                       "title":  "Environmental, economic, social and technological viewpoints on green ammonia as a basis for low carbon fertilizer: a perspective",
+                       "title":  "Accelerating scientific discovery with Co-Scientist",
                        "authors":  [
-                                       "Asma Jebari",
-                                       "Yusheng Zhang",
-                                       "Adrian L. Collins"
+                                       "Juraj Gottweis",
+                                       "Wei-Hung Weng",
+                                       "Alexander Daryin",
+                                       "Tao Tu"
                                    ],
-                       "institution":  "Rothamsted Research",
-                       "domain":  "Climate Tech and Sustainability",
-                       "field":  "Climate Tech and Sustainability",
+                       "institution":  "Google (Switzerland)",
+                       "venue":  "Nature",
+                       "citations":  7,
+                       "domain":  "protein language model structure design",
+                       "field":  null,
                        "trl":  null,
                        "india_connection":  null,
-                       "link":  "https://doi.org/10.15302/j-fase-2027722",
-                       "why":  "Ammonia, as a nitrogen-based fertilizer is essential for enhancing crop yields and supporting global food production.",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Comparison of Carbon Utilization Technologies for Decarbonization Strategy in the Ammonia Industry",
-                       "authors":  [
-                                       "Daril Ridho Zuchrillah",
-                                       "Rizal Arifin",
-                                       "Friska Dwi Pratiwi",
-                                       "Niken Rani Nastiti"
-                                   ],
-                       "institution":  "Sepuluh Nopember Institute of Technology",
-                       "domain":  "Climate Tech and Sustainability",
-                       "field":  "Climate Tech and Sustainability",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.22441/sinergi.2026.2.024",
-                       "why":  "Global climate change is caused by high greenhouse gas (GHG) emissions.",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "A de novo LDLR mutation in severe familial hypercholesterolemia: case report, functional characterization, and a personalized gene correction strategy exploration",
-                       "authors":  [
-                                       "Shuran Zhang",
-                                       "Wenming Huang",
-                                       "Hetao Chen",
-                                       "Ninghui Mu"
-                                   ],
-                       "institution":  "Kunming University of Science and Technology",
-                       "domain":  "Synthetic Biology and Biotech",
-                       "field":  "Synthetic Biology and Biotech",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.3389/fcvm.2026.1814798",
-                       "why":  "Background Familial hypercholesterolemia (FH) is a genetic disorder of lipid metabolism characterized by elevated plasma low-density lipoprotein resulting in cardiovascular disease (CVD).",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Embodied intelligent industrial robotics: Framework and techniques",
-                       "authors":  [
-                                       "Chaoran Zhang",
-                                       "Chenhao Zhang",
-                                       "Zhaobo Xu",
-                                       "Qiang Xie"
-                                   ],
-                       "institution":  "Tsinghua–Berkeley Shenzhen Institute",
-                       "domain":  "Robotics and Embodied AI",
-                       "field":  "Robotics and Embodied AI",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.1016/j.jmsy.2026.06.001",
-                       "why":  "",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Multimodal Contrastive Learning for Zero-Shot Instruction-Following Robot with Synthetic Data",
-                       "authors":  [
-                                       "Washington Kamadi",
-                                       "Jackson Githu Njiri",
-                                       "Samuel Kangwagye",
-                                       "Shohei Aoki"
-                                   ],
-                       "institution":  "Pan African University Institute for Basic Sciences, Technology and Innovation",
-                       "domain":  "Robotics and Embodied AI",
-                       "field":  "Robotics and Embodied AI",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.48084/etasr.18291",
-                       "why":  "Robot trajectory prediction is heavily dependent on large-scale real-world demonstrations, which limit scalability, increase data acquisition costs, and eventually prevent zero-shot generalization.",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Optimizing phage therapy with antidefense proteins acquired from the environment",
-                       "authors":  [
-                                       "Ritam Das"
-                                   ],
-                       "institution":  "International Max Planck Research School for Advanced Methods in Process and Systems Engineering",
-                       "domain":  "Synthetic Biology and Biotech",
-                       "field":  "Synthetic Biology and Biotech",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.3389/fmicb.2026.1796329",
-                       "why":  "With an estimated number of 10 31 , bacteriophages are ubiquitous biological entities prevalent in various ecological niches (Hendrix et al., 1999;Mushegian, 2020).",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Spontaneous Chemical Amine Oxidation in Organic Solvents Paired With Electrochemical Hydrogen Production",
-                       "authors":  [
-                                       "Tzu-Ting Weng",
-                                       "S Chen",
-                                       "Jing‐Mei Huang",
-                                       "Jyh‐Pin Chou"
-                                   ],
-                       "institution":  "National Taiwan University of Science and Technology",
-                       "domain":  "Climate Tech and Sustainability",
-                       "field":  "Climate Tech and Sustainability",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.1002/anie.9937212",
-                       "why":  "ABSTRACT Benzonitrile (BN) is a versatile chemical building block extensively applied across multiple sectors.",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "High-pulse-energy integrated mode-locked laser using a Mamyshev oscillator",
-                       "authors":  [
-                                       "Zheru Qiu",
-                                       "Jianqi Hu",
-                                       "Xuan Yang",
-                                       "Zhongshu Liu"
-                                   ],
-                       "institution":  "École Polytechnique Fédérale de Lausanne",
-                       "domain":  "Photonics and Optics",
-                       "field":  "Photonics and Optics",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.1038/s41586-026-10517-4",
-                       "why":  "",
-                       "picked":  true
-                   },
-                   {
-                       "title":  "Photonic Mixture-of-Experts for scalable multi-task on-chip optical neural networks",
-                       "authors":  [
-                                       "Wencan Liu",
-                                       "Zhenghang Zhang",
-                                       "Peng Meng Chan",
-                                       "Run Sun"
-                                   ],
-                       "institution":  "National Engineering Research Center for Information Technology in Agriculture",
-                       "domain":  "Photonics and Optics",
-                       "field":  "Photonics and Optics",
-                       "trl":  null,
-                       "india_connection":  null,
-                       "link":  "https://doi.org/10.1038/s41467-026-73983-4",
-                       "why":  "Photonic computing offers an energy-efficient, high-bandwidth platform for artificial intelligence (AI) but currently faces scalability bottlenecks stemming from depth-dependent designs, linear optical structures, and intrinsic optical loss",
+                       "link":  "https://doi.org/10.1038/s41586-026-10644-y",
+                       "why":  "Scientific discovery is driven by scientists generating novel hypotheses for complex problems that undergo rigorous experimental validation.",
                        "picked":  true
                    },
                    {
@@ -161,14 +31,201 @@
                                        "Ashildur Fridriksdottir"
                                    ],
                        "institution":  "Stanford University",
-                       "domain":  "Semiconductors and Chip Design",
-                       "field":  "Semiconductors and Chip Design",
+                       "venue":  "Nature Nanotechnology",
+                       "citations":  2,
+                       "domain":  "2D semiconductor transistor scaling",
+                       "field":  null,
                        "trl":  null,
                        "india_connection":  null,
                        "link":  "https://doi.org/10.1038/s41565-026-02161-w",
                        "why":  "Abstract Nanoscale transistors demand aggressive scaling of all channel dimensions—length, width and thickness.",
                        "picked":  true
+                   },
+                   {
+                       "title":  "Bridging quantum mechanics to liquid properties via a universal organic force field",
+                       "authors":  [
+                                       "Tianze Zheng",
+                                       "Xingyuan Xu",
+                                       "Zhi Wang",
+                                       "Zhenze Yang"
+                                   ],
+                       "institution":  "Beijing Dance Academy",
+                       "venue":  "Nature Communications",
+                       "citations":  2,
+                       "domain":  "machine learning molecular design generative",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1038/s41467-026-73566-3",
+                       "why":  "Molecular dynamics simulations are essential tools for unraveling atomic-level insights into the structure and behavior of condensed-phase systems.",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Polyploidy: A macromutational force pushing bioeconomic developments",
+                       "authors":  [
+                                       "Marlies K. R. Peeters",
+                                       "Yves Van de Peer"
+                                   ],
+                       "institution":  "Vlaams Instituut voor Biotechnologie",
+                       "venue":  "Proceedings of the National Academy of Sciences",
+                       "citations":  2,
+                       "domain":  "base editing prime editing in vivo therapy",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1073/pnas.2522065123",
+                       "why":  "Polyploidization, the consequence of genome doubling, is a macromutation that reshapes genomes, phenotypes, and ecological interactions.",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "From printed architectures to functional batteries: printing technologies, post-processing, and sintering",
+                       "authors":  [
+                                       "Xiaowen Zheng",
+                                       "Karol Viviana Mejía‐Centeno",
+                                       "Malik Dilshad Khan",
+                                       "Andreu Cabot"
+                                   ],
+                       "institution":  "Institut de Recerca en Energia de Catalunya",
+                       "venue":  "Advanced Materials Joining",
+                       "citations":  3,
+                       "domain":  "self-driving laboratory autonomous experimentation",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1007/s44500-026-00002-3",
+                       "why":  "Abstract 3D printing has rapidly evolved into a versatile fabrication strategy for advanced energy storage devices by enabling unprecedented control over geometry, porosity and material distribution.",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "2D Bi2O2Se: structure-property evolution, electronic tunability and technological prospects",
+                       "authors":  [
+                                       "Muhammad Zubair Nawaz",
+                                       "Xiaojie Jiang",
+                                       "Tianwei Qin",
+                                       "Muhammad Khalid"
+                                   ],
+                       "institution":  "Yangtze Optical Electronic (China)",
+                       "venue":  "Coordination Chemistry Reviews",
+                       "citations":  3,
+                       "domain":  "2D semiconductor transistor scaling",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1016/j.ccr.2026.218074",
+                       "why":  "",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Cell death–induced release of the pro-aging protein acyl CoA binding protein (ACBP) into the circulation",
+                       "authors":  [
+                                       "Yan Rong",
+                                       "Flavia Lambertucci",
+                                       "Yaning Yang",
+                                       "Vincent Carbonnier"
+                                   ],
+                       "institution":  "Inserm",
+                       "venue":  "Cell Death and Differentiation",
+                       "citations":  1,
+                       "domain":  "protein language model structure design",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1038/s41418-026-01775-w",
+                       "why":  "Acyl-CoA-binding protein (ACBP, encoded by diazepam binding inhibitor, DBI) is an abundant intracellular regulator of lipid metabolism that also circulates systemically, yet the mechanisms governing its release and its relationship to organ",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Enhancing soil science research with multi-agent artificial intelligence systems",
+                       "authors":  [
+                                       "Budiman Minasny",
+                                       "Alex McBratney",
+                                       "José A.M. Demattê",
+                                       "Mercedes Román Dobarco"
+                                   ],
+                       "institution":  "The University of Sydney",
+                       "venue":  "Frontiers in Science",
+                       "citations":  2,
+                       "domain":  "self-driving laboratory autonomous experimentation",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.3389/fsci.2026.1721295",
+                       "why":  "Soil science is entering a new era characterized by the integration of artificial intelligence (AI) multi-agent systems, extending the field beyond traditional machine learning (ML) applications such as digital soil mapping and spectroscopy",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Trends in vibrational spectroscopy on optical waveguides",
+                       "authors":  [
+                                       "James S. Wilkinson",
+                                       "Philip N. Bartlett"
+                                   ],
+                       "institution":  "University of Southampton",
+                       "venue":  "Analytical and Bioanalytical Chemistry",
+                       "citations":  0,
+                       "domain":  "integrated photonics optical neural network",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1007/s00216-026-06613-z",
+                       "why":  "Vibrational spectroscopy, due to its inherent specificity in providing a spectral \"fingerprint\" of molecular composition, is an important tool to identify and quantify molecules in environmental, clinical, biotechnological, security, and ma",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Hydrophobic liquid electrolyte interphases for efficient aqueous zinc batteries",
+                       "authors":  [
+                                       "Guanjie Li",
+                                       "Shilin Zhang",
+                                       "Jodie A. Yuwono",
+                                       "Xinyu Li"
+                                   ],
+                       "institution":  "UCL Australia",
+                       "venue":  "Nature Nanotechnology",
+                       "citations":  1,
+                       "domain":  "solid-state battery lithium metal anode",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1038/s41565-026-02187-0",
+                       "why":  "Abstract Expanding the electrochemical stability window of aqueous electrolyte solutions is a viable strategy to improve battery performance.",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Engineering human PEG10-based nanoparticles for RNA self-packaging, delivery and cancer therapy",
+                       "authors":  [
+                                       "P. W. Chen",
+                                       "Ting-Lun Tien",
+                                       "Vy Anh Truong",
+                                       "Quyen Thuc Dang"
+                                   ],
+                       "institution":  "National Tsing Hua University",
+                       "venue":  "Nature Communications",
+                       "citations":  0,
+                       "domain":  "base editing prime editing in vivo therapy",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1038/s41467-026-74352-x",
+                       "why":  "PEG10 protein was recently uncovered to self-assemble and self-package its own mRNA into nanoparticles, but the particles require expensive transfection for production and have yet to be explored for cancer therapy.",
+                       "picked":  true
+                   },
+                   {
+                       "title":  "Mentorship Strategies for New Principal Investigators in Computational Chemistry",
+                       "authors":  [
+                                       "Matheus Ferraz",
+                                       "Tarak Karmakar",
+                                       "Abdurrahman Olğaç"
+                                   ],
+                       "institution":  "Cancer Registry of Norway",
+                       "venue":  "Journal of Chemical Information and Modeling",
+                       "citations":  0,
+                       "domain":  "self-driving laboratory autonomous experimentation",
+                       "field":  null,
+                       "trl":  null,
+                       "india_connection":  null,
+                       "link":  "https://doi.org/10.1021/acs.jcim.6c01193",
+                       "why":  "Computational chemistry has become increasingly central across many sectors, from pharmaceuticals to materials science and beyond.",
+                       "picked":  true
                    }
                ],
-    "draftedAt":  "2026-06-14T17:53:06.566081+00:00"
+    "draftedAt":  "2026-06-14T18:04:53.369024+00:00"
 }

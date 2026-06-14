@@ -42,8 +42,45 @@ def _link(w):
 # real-but-junk records ("Lee Sharks", "The First Waters", etc).
 _JUNK_HOSTS = ("zenodo", "figshare", "ssrn", "preprints.org", "researchsquare", "osf.io", "authorea")
 
+# Top-tier venues get a big quality boost so genuine breakthroughs float
+# above the long tail of fine-but-forgettable papers. Substring match on
+# the venue name (case-insensitive).
+_TOP_VENUES = (
+    "nature", "science", "cell", "pnas", "proceedings of the national academy",
+    "physical review letters", "physical review x", "joule", "matter", "chem",
+    "journal of the american chemical society", "angewandte", "advanced materials",
+    "nature communications", "science advances", "nature methods", "nature biotechnology",
+    "nature medicine", "nature materials", "nature physics", "nature photonics",
+    "nature nanotechnology", "nature energy", "nature chemistry", "nature machine intelligence",
+    "lancet", "nejm", "new england journal", "immunity", "neuron", "molecular cell",
+)
+# Titles that signal a non-breakthrough (reviews, opinion, clinical anecdotes).
+_NON_BREAKTHROUGH = (
+    "review", "survey", "case report", "a case of", "perspective", "commentary",
+    "editorial", "viewpoint", "meta-analysis", "systematic review", "scoping review",
+    "bibliometric", "overview of", "mini-review", "tutorial",
+)
 
-def recent_works(query, since_days=45, n=6, mailto=MAILTO, min_pool=20):
+
+def _venue_boost(venue):
+    v = (venue or "").lower()
+    for t in _TOP_VENUES:
+        if t in v:
+            return 10.0
+    return 0.0
+
+
+def _is_non_breakthrough(title, w):
+    t = (title or "").lower()
+    if any(k in t for k in _NON_BREAKTHROUGH):
+        return True
+    # OpenAlex sometimes tags the crossref subtype
+    if (w.get("type_crossref") or "") in ("review-article", "editorial", "letter"):
+        return True
+    return False
+
+
+def recent_works(query, since_days=45, n=6, mailto=MAILTO, min_pool=50):
     """Real recent works matching `query`, ranked by relevance, junk filtered.
 
     Returns dicts with ONLY verified fields (every value is from OpenAlex):
@@ -93,7 +130,19 @@ def recent_works(query, since_days=45, n=6, mailto=MAILTO, min_pool=20):
             continue
         if len(auths) == 0:
             continue
+        if _is_non_breakthrough(w.get("title"), w):
+            continue  # drop reviews / case reports / editorials
+        # Quality score: top venue dominates, then citation traction, then
+        # recency. Surfaces genuine breakthroughs over the competent long tail.
+        cites = w.get("cited_by_count", 0) or 0
+        days_old = 999
+        try:
+            days_old = (datetime.now(timezone.utc) - datetime.fromisoformat(w["publication_date"]).replace(tzinfo=timezone.utc)).days
+        except Exception:
+            pass
+        score = _venue_boost(venue) + min(cites, 20) * 0.4 + max(0, 90 - days_old) / 30
         out.append({
+            "_score": score,
             "venue": venue,
             "title": w.get("title"),
             "authors": auths,                       # REAL authors
@@ -101,13 +150,14 @@ def recent_works(query, since_days=45, n=6, mailto=MAILTO, min_pool=20):
             "link": _link(w),                        # REAL link (DOI/landing)
             "year": w.get("publication_year"),
             "date": w.get("publication_date"),
+            "citations": cites,
             "abstract": _abstract(w.get("abstract_inverted_index")),
             "openalex_id": w.get("id"),
             "verified": True,                        # came from the DB, not an LLM
         })
-        if len(out) >= n:
-            break
-    return out
+    # Quality-rank the filtered pool, then keep the top n.
+    out.sort(key=lambda x: x["_score"], reverse=True)
+    return out[:n]
 
 
 if __name__ == "__main__":

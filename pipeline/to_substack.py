@@ -42,8 +42,7 @@ def main():
         link = p.get("link")
         head = f"**[{title}]({link})**" if link else f"**{title}**"
         out.append(head)
-        meta = " · ".join(x for x in [p.get("institution"), p.get("field"),
-                 (f"TRL {p['trl']}" if p.get("trl") else None)] if x)
+        meta = " · ".join(x for x in [p.get("venue"), p.get("institution")] if x)
         if meta:
             out.append(f"*{meta}*")
         if p.get("why"):

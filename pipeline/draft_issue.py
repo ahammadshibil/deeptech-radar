@@ -95,22 +95,53 @@ def main():
     ap.add_argument("--pick", type=int, default=8)
     ap.add_argument("--data", default=str(ROOT / "data.json"))
     ap.add_argument("--llm", action="store_true", help="use Perplexity to write the 'why' lines")
+    ap.add_argument("--fresh", action="store_true", help="pull a high-quality pool straight from OpenAlex (frontier wheelhouse queries) instead of reading data.json")
+    ap.add_argument("--days", type=int, default=45, help="lookback window for --fresh")
     args = ap.parse_args()
 
-    data = json.loads(Path(args.data).read_text())
     bts, seen = [], set()
-    for dom in data.get("research", []):
-        for bt in dom.get("breakthroughs", []):
-            # Dedupe across sectors — the same paper can match two queries.
-            key = (bt.get("link") or "") or re.sub(r"[^a-z0-9]", "", (bt.get("title") or "").lower())[:50]
-            if key in seen:
-                continue
-            seen.add(key)
-            bts.append({**bt, "domain": dom.get("name")})
-    if not bts:
-        sys.exit("No breakthroughs in data.json — run refresh.py first.")
+    if args.fresh:
+        # Curated frontier queries — Shibil's wheelhouse (bio-AI heavy +
+        # hard deeptech). Each is sharp enough that OpenAlex returns the
+        # actual breakthroughs; quality scoring (top venues) ranks them.
+        from openalex import recent_works
+        FRONTIER_QUERIES = [
+            "de novo protein design binder enzyme", "protein language model structure design",
+            "base editing prime editing in vivo therapy", "CRISPR gene therapy clinical trial",
+            "self-driving laboratory autonomous experimentation", "machine learning molecular design generative",
+            "single cell spatial transcriptomics atlas", "organoid disease model",
+            "mRNA lipid nanoparticle targeted delivery", "antibody design machine learning",
+            "tokamak fusion confinement net energy gain", "2D semiconductor transistor scaling",
+            "integrated photonics optical neural network", "solid-state battery lithium metal anode",
+            "quantum error correction logical qubit", "perovskite tandem solar cell efficiency",
+            "neuromorphic in-memory computing", "robot learning manipulation foundation model",
+        ]
+        for q in FRONTIER_QUERIES:
+            for w in recent_works(q, since_days=args.days, n=4):
+                key = w.get("link") or re.sub(r"[^a-z0-9]", "", (w.get("title") or "").lower())[:50]
+                if key in seen:
+                    continue
+                seen.add(key)
+                bts.append({**w, "domain": q, "key_breakthrough": (w.get("abstract") or "")[:300]})
+        if not bts:
+            sys.exit("OpenAlex returned nothing — check connectivity.")
+        # Already quality-scored per query; re-rank the merged pool by venue+recency.
+        from openalex import _venue_boost
+        bts.sort(key=lambda b: (b.get("_score", 0)), reverse=True)
+    else:
+        data = json.loads(Path(args.data).read_text())
+        for dom in data.get("research", []):
+            for bt in dom.get("breakthroughs", []):
+                # Dedupe across sectors — the same paper can match two queries.
+                key = (bt.get("link") or "") or re.sub(r"[^a-z0-9]", "", (bt.get("title") or "").lower())[:50]
+                if key in seen:
+                    continue
+                seen.add(key)
+                bts.append({**bt, "domain": dom.get("name")})
+        if not bts:
+            sys.exit("No breakthroughs in data.json — run refresh.py first.")
+        bts.sort(key=_score, reverse=True)
 
-    bts.sort(key=_score, reverse=True)
     shortlist = bts[: args.pick]
 
     papers = []
@@ -123,6 +154,8 @@ def main():
             "title": bt.get("title"),
             "authors": bt.get("authors") or [],
             "institution": bt.get("institution"),
+            "venue": bt.get("venue"),          # journal — a strong "exciting" signal
+            "citations": bt.get("citations"),
             "domain": bt.get("domain"),
             "field": bt.get("field"),
             "trl": bt.get("trl"),

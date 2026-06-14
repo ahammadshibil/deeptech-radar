@@ -68,7 +68,7 @@ function renderIssue(issue){
     <div class="paper">
       <div class="why">${esc(p.why||p.title)}</div>
       <div class="t">${p.link?`<a href="${esc(p.link)}" target="_blank" rel="noopener">${esc(p.title)} ↗</a>`:`<span style="color:var(--fg);font-weight:600">${esc(p.title)}</span>`}</div>
-      <div class="meta">${[p.institution,p.field].filter(Boolean).map(esc).join(" · ")}</div>
+      <div class="meta">${[p.venue,p.institution].filter(Boolean).map(esc).join(" · ")}</div>
       <div style="margin-top:7px">${p.domain?`<span class="chip">${esc(p.domain)}</span>`:""}${p.trl?`<span class="chip trl">TRL ${esc(p.trl)}</span>`:""}${p.india_connection?`<span class="chip in">India</span>`:""}</div>
     </div>`).join("") : `<div class="empty">No picks in this issue yet.</div>`;
 }

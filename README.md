@@ -54,10 +54,13 @@ A curated, voiced, monthly companion to the live radar. The radar is the
 firehose; this is the hand-picked issue. Pipeline-drafts-you-trim:
 
 ```bash
-# 1. Draft from the month's breakthroughs (orders frontier-first)
-python pipeline/draft_issue.py --month 2026-06
-#    optional: PERPLEXITY_API_KEY=... python pipeline/draft_issue.py --llm
-#    → writes issues/2026-06.draft.json
+# 1. Draft a high-quality candidate pool. --fresh pulls straight from
+#    OpenAlex across frontier wheelhouse queries, ranked by venue
+#    (Nature/Science/Cell…) + recency, reviews/case-reports excluded:
+python pipeline/draft_issue.py --fresh --month 2026-06 --pick 12
+#    (or drop --fresh to draft from the radar's sector feed in data.json)
+#    optional: PERPLEXITY_API_KEY=... python pipeline/draft_issue.py --fresh --llm
+#    → writes issues/2026-06.draft.json — every paper a real DOI
 # 2. Trim it: keep what excited you (picked:false to drop), rewrite each
 #    `why` line + the `intro` in your own voice.
 # 3. Publish: rename to issues/2026-06.json, add "2026-06" to issues/index.json.
